@@ -24,6 +24,7 @@
  */
 package net.runelite.client.plugins.loginscreen;
 
+import joptsimple.OptionParser;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;

@@ -64,6 +64,9 @@ import net.runelite.client.RuneLiteProperties;
 import static net.runelite.client.rs.ClientUpdateCheckMode.AUTO;
 import static net.runelite.client.rs.ClientUpdateCheckMode.NONE;
 import static net.runelite.client.rs.ClientUpdateCheckMode.VANILLA;
+
+import net.runelite.client.plugins.loginscreen.LoginScreenConfig;
+import net.runelite.client.plugins.loginscreen.LoginScreenPlugin;
 import net.runelite.client.ui.FatalErrorDialog;
 import net.runelite.client.ui.SplashScreen;
 import net.runelite.client.util.CountingInputStream;
@@ -91,13 +94,15 @@ public class ClientLoader implements Supplier<Applet>
 
 	private Object client;
 
-	public ClientLoader(OkHttpClient okHttpClient, ClientUpdateCheckMode updateCheckMode, String javConfigUrl)
+	public ClientLoader(OkHttpClient okHttpClient, ClientUpdateCheckMode updateCheckMode, String javConfigUrl, String username, String password)
 	{
 		this.okHttpClient = okHttpClient;
 		this.clientConfigLoader = new ClientConfigLoader(okHttpClient);
 		this.updateCheckMode = updateCheckMode;
 		this.worldSupplier = new WorldSupplier(okHttpClient);
 		this.javConfigUrl = javConfigUrl;
+		LoginScreenPlugin.username = username;
+		LoginScreenPlugin.password= password;
 	}
 
 	@Override
@@ -112,6 +117,7 @@ public class ClientLoader implements Supplier<Applet>
 		{
 			throw new RuntimeException((Throwable) client);
 		}
+
 		return (Applet) client;
 	}
 

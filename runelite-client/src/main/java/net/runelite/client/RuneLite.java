@@ -55,6 +55,7 @@ import joptsimple.util.EnumConverter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.client.account.SessionManager;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.discord.DiscordService;
@@ -142,7 +143,8 @@ public class RuneLite
 		parser.accepts("jav_config", "jav_config url")
 			.withRequiredArg()
 			.defaultsTo(RuneLiteProperties.getJavConfig());
-
+		parser.accepts("username","the username of an account").withRequiredArg();
+		parser.accepts("password","the password of an account").withRequiredArg();
 		final ArgumentAcceptingOptionSpec<File> sessionfile = parser.accepts("sessionfile", "Use a specified session file")
 			.withRequiredArg()
 			.withValuesConvertedBy(new ConfigFileConverter())
@@ -207,8 +209,9 @@ public class RuneLite
 
 		try
 		{
-			final ClientLoader clientLoader = new ClientLoader(okHttpClient, options.valueOf(updateMode), (String) options.valueOf("jav_config"));
-
+			final ClientLoader clientLoader = new ClientLoader(okHttpClient, options.valueOf(updateMode), (String) options.valueOf("jav_config"), (String)
+					options.valueOf("username"), (String) options.valueOf("password"));
+			System.out.println("username "+ options.valueOf("username")+ options.valueOf("password"));
 			new Thread(() ->
 			{
 				clientLoader.get();
