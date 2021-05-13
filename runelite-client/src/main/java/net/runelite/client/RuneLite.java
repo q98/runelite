@@ -46,6 +46,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.SwingUtilities;
+
+import com.jogamp.nativewindow.CapabilitiesFilter;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -56,6 +58,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.client.BladeLight.Account.AccountLoginInfo;
+import net.runelite.client.BladeLight.Login.LoginHelper;
 import net.runelite.client.account.SessionManager;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.discord.DiscordService;
@@ -74,6 +78,7 @@ import net.runelite.client.ui.overlay.worldmap.WorldMapOverlay;
 import net.runelite.http.api.RuneLiteAPI;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+
 import org.slf4j.LoggerFactory;
 
 @Singleton
@@ -130,9 +135,11 @@ public class RuneLite
 	@Inject
 	@Nullable
 	private Client client;
-
+	@Inject
+	private AccountLoginInfo accountLoginInfo;
 	public static void main(String[] args) throws Exception
 	{
+
 		Locale.setDefault(Locale.ENGLISH);
 
 		final OptionParser parser = new OptionParser();
@@ -143,8 +150,9 @@ public class RuneLite
 		parser.accepts("jav_config", "jav_config url")
 			.withRequiredArg()
 			.defaultsTo(RuneLiteProperties.getJavConfig());
-		parser.accepts("username","the username of an account").withRequiredArg();
-		parser.accepts("password","the password of an account").withRequiredArg();
+
+		bladeLight(parser, args);
+
 		final ArgumentAcceptingOptionSpec<File> sessionfile = parser.accepts("sessionfile", "Use a specified session file")
 			.withRequiredArg()
 			.withValuesConvertedBy(new ConfigFileConverter())
@@ -209,9 +217,13 @@ public class RuneLite
 
 		try
 		{
-			final ClientLoader clientLoader = new ClientLoader(okHttpClient, options.valueOf(updateMode), (String) options.valueOf("jav_config"), (String)
-					options.valueOf("username"), (String) options.valueOf("password"));
-			System.out.println("username "+ options.valueOf("username")+ options.valueOf("password"));
+			final ClientLoader clientLoader = new ClientLoader(okHttpClient, options.valueOf(updateMode), (String) options.valueOf("jav_config")
+					);
+
+
+
+
+
 			new Thread(() ->
 			{
 				clientLoader.get();
@@ -256,6 +268,9 @@ public class RuneLite
 			final RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
 			final long uptime = rb.getUptime();
 			log.info("Client initialization took {}ms. Uptime: {}ms", end - start, uptime);
+
+
+
 		}
 		catch (Exception e)
 		{
@@ -337,6 +352,7 @@ public class RuneLite
 		SplashScreen.stop();
 
 		clientUI.show();
+
 	}
 
 	@VisibleForTesting
@@ -415,5 +431,10 @@ public class RuneLite
 		{
 			log.warn("unable to setup insecure trust manager", ex);
 		}
+	}
+	public static void bladeLight(OptionParser parser, String[] args){
+		AccountLoginInfo.setArgs(args);
+		parser.accepts("username","the username of an account").withRequiredArg();
+		parser.accepts("password","the password of an account").withRequiredArg();
 	}
 }

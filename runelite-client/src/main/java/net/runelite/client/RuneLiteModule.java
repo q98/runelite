@@ -39,6 +39,8 @@ import javax.inject.Singleton;
 import lombok.AllArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.api.hooks.Callbacks;
+import net.runelite.client.BladeLight.Account.AccountLoginInfo;
+import net.runelite.client.BladeLight.Login.LoginHelper;
 import net.runelite.client.account.SessionManager;
 import net.runelite.client.callback.Hooks;
 import net.runelite.client.chat.ChatMessageManager;
@@ -88,6 +90,8 @@ public class RuneLiteModule extends AbstractModule
 		bind(PluginManager.class);
 		bind(SessionManager.class);
 
+		bind(AccountLoginInfo.class);
+		bind(LoginHelper.class);
 		bind(Gson.class).toInstance(RuneLiteAPI.GSON);
 
 		bind(Callbacks.class).to(Hooks.class);

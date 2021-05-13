@@ -41,7 +41,9 @@ import net.runelite.api.Constants;
 import net.runelite.api.GameState;
 import net.runelite.api.SpritePixels;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.client.BladeLight.Login.LoginHelper;
 import net.runelite.client.RuneLite;
+
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.SessionOpen;
@@ -51,7 +53,6 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.rs.ClientLoader;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.OSType;
 
@@ -65,8 +66,7 @@ public class LoginScreenPlugin extends Plugin implements KeyListener
 	private static final int MAX_USERNAME_LENGTH = 254;
 	private static final int MAX_PIN_LENGTH = 6;
 	private static final File CUSTOM_LOGIN_SCREEN_FILE = new File(RuneLite.RUNELITE_DIR, "login.png");
-	public static String username = "";
-	public static String password;
+
 	@Inject
 	private Client client;
 
@@ -80,6 +80,8 @@ public class LoginScreenPlugin extends Plugin implements KeyListener
 	private KeyManager keyManager;
 
 	private String usernameCache;
+	@Inject
+	LoginHelper loginHelper;
 
 	@Override
 	protected void startUp() throws Exception
@@ -149,7 +151,9 @@ public class LoginScreenPlugin extends Plugin implements KeyListener
 
 			log.debug("Saving username: {}", username);
 			config.username(username);
+
 		}
+		loginHelper.login();
 	}
 
 	@Subscribe
@@ -203,8 +207,7 @@ public class LoginScreenPlugin extends Plugin implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		client.setUsername(username);
-		client.setPassword(password);
+
 		if (!config.pasteEnabled() || (
 			client.getGameState() != GameState.LOGIN_SCREEN &&
 			client.getGameState() != GameState.LOGIN_SCREEN_AUTHENTICATOR))
