@@ -47,7 +47,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.SwingUtilities;
 
-import com.jogamp.nativewindow.CapabilitiesFilter;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -57,9 +56,7 @@ import joptsimple.util.EnumConverter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.client.BladeLight.Account.AccountLoginInfo;
-import net.runelite.client.BladeLight.Login.LoginHelper;
+import net.runelite.client.plugins.bladelite.client.startup.ArgumentsAccountInfo;
 import net.runelite.client.account.SessionManager;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.discord.DiscordService;
@@ -136,7 +133,7 @@ public class RuneLite
 	@Nullable
 	private Client client;
 	@Inject
-	private AccountLoginInfo accountLoginInfo;
+	private ArgumentsAccountInfo accountLoginInfo;
 	public static void main(String[] args) throws Exception
 	{
 
@@ -433,7 +430,7 @@ public class RuneLite
 		}
 	}
 	public static void bladeLight(OptionParser parser, String[] args){
-		AccountLoginInfo.setArgs(args);
+		ArgumentsAccountInfo.setArgs(args);
 		parser.accepts("username","the username of an account").withRequiredArg();
 		parser.accepts("password","the password of an account").withRequiredArg();
 	}

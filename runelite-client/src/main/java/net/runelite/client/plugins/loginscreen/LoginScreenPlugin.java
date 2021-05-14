@@ -41,7 +41,6 @@ import net.runelite.api.Constants;
 import net.runelite.api.GameState;
 import net.runelite.api.SpritePixels;
 import net.runelite.api.events.GameStateChanged;
-import net.runelite.client.BladeLight.Login.LoginHelper;
 import net.runelite.client.RuneLite;
 
 import net.runelite.client.callback.ClientThread;
@@ -80,8 +79,6 @@ public class LoginScreenPlugin extends Plugin implements KeyListener
 	private KeyManager keyManager;
 
 	private String usernameCache;
-	@Inject
-	LoginHelper loginHelper;
 
 	@Override
 	protected void startUp() throws Exception
@@ -153,7 +150,6 @@ public class LoginScreenPlugin extends Plugin implements KeyListener
 			config.username(username);
 
 		}
-		loginHelper.login();
 	}
 
 	@Subscribe
